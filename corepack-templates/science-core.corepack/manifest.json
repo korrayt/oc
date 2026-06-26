@@ -1,0 +1,23 @@
+{
+  "id": "science-core-pack",
+  "name": "Science Core Pack",
+  "version": "0.1.0",
+  "type": "Scientific Pack",
+  "description": "Quantum, matematik ve kimya çalışmalarında kütüphane destekli analiz, açıklama ve araştırma akışı sağlar.",
+  "capabilities": [
+    "scientific-computing",
+    "math-reasoning",
+    "quantum-circuit-reasoning",
+    "cheminformatics-reasoning"
+  ],
+  "libraries": [
+    "mathjs",
+    "nerdamer",
+    "algebrite",
+    "ml-matrix",
+    "quantum-circuit",
+    "OpenFermion",
+    "openchemlib-js",
+    "RDKit.js"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "core-i-science-library-bundle",
+  "version": "0.1.0",
+  "updatedAt": "2026-06-03",
+  "description": "core-I icin quantum, matematik ve kimya odakli bilimsel kutuphane havuzu.",
+  "installedNpmPackages": [
+    "mathjs",
+    "nerdamer",
+    "algebrite",
+    "ml-matrix",
+    "openchemlib",
+    "@rdkit/rdkit",
+    "quantum-circuit"
+  ],
+  "referenceRepositories": [
+    "https://github.com/josdejong/mathjs",
+    "https://github.com/quantastica/quantum-circuit",
+    "https://github.com/quantumlib/OpenFermion",
+    "https://github.com/cheminfo/openchemlib-js",
+    "https://github.com/rdkit/rdkit-js"
+  ],
+  "domains": {
+    "math": ["mathjs", "nerdamer", "algebrite", "ml-matrix"],
+    "quantum": ["quantum-circuit", "OpenFermion"],
+    "chemistry": ["openchemlib", "@rdkit/rdkit", "openchemlib-js", "RDKit.js"]
+  },
+  "safetyNotes": [
+    "Kimya, laboratuvar, endustriyel guvenlik veya saglik etkisi olan cevaplarda dogrulama gereklidir.",
+    "core-I gercek bir hesaplama motoru calistirmadigi durumda hesap yaptigini iddia etmemelidir.",
+    "Lisans gecersizse bilimsel paketler acik sinirli mod davranisini asla gizlememelidir."
+  ]
+}

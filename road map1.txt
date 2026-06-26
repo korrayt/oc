@@ -1,0 +1,690 @@
+Sen core-I projesini devralıyorsun.
+
+PROJE ADI:
+core-I
+
+GENEL AMAÇ:
+core-I, Windows masaüstünde çalışan, local-first / offline-first tasarlanmış, Ollama üzerinden yerel LLM kullanan, Tauri + React + TypeScript tabanlı modüler AI çekirdeğidir.
+
+core-I sonradan .corepack paketleriyle yeni yetenekler, roller, personlar, uzmanlıklar, veri setleri, iş akışları ve araçlar kazanabilecek.
+
+ŞU ANKİ DURUM:
+Ubuntu geliştirme ortamı çöktü. Bu yüzden geliştirme Windows’a taşınıyor.
+
+Elimizdeki klasör büyük ihtimalle tam Tauri projesi değil; önceki core-I v0.1-alpha frontend dosyalarını içeren bir paket olabilir.
+
+Eğer klasörde src-tauri yoksa:
+Bu klasörü tam Tauri projesi sanma.
+Mevcut React / TypeScript frontend dosyalarını koru.
+Eksik minimal Tauri kabuğunu ekle.
+
+HEDEF PLATFORM:
+Öncelik Windows.
+Hedef:
+npm install
+npm run tauri dev
+
+Sonra:
+npm run tauri build
+
+Final hedef:
+Windows .exe / installer üretmek.
+
+TEKNOLOJİ:
+- Tauri
+- React
+- TypeScript
+- Vite
+- Rust / Cargo
+- Ollama
+- localStorage ile geçici yerel hafıza
+- İleride SQLite / local database
+
+ÖNEMLİ KIRMIZI ÇİZGİLER:
+1. Stealth mode ekleme.
+2. Manipüle cevap mantığı ekleme.
+3. Lisans geçersizken sessizce bozuk / eksik / yanıltıcı cevap üretme.
+4. Token yoksa veya geçersizse kullanıcıya açıkça “sınırlı mod / lisans geçersiz” göster.
+5. Kullanıcı kandırılmamalı.
+6. Gerçekten çalışmayan özellikleri “aktif” gösterme.
+7. Henüz geliştirilmemiş özellikleri “planned” göster.
+8. Mevcut çalışan App.tsx / App.css davranışını gereksiz yere bozma.
+9. Büyük refactor yapmadan önce v0.1-alpha’yı çalışır hale getir.
+10. Dosyaların içine shell artığı koyma.
+
+DOSYA TEMİZLİĞİ:
+App.tsx içinde şunlar olmamalı:
+cat > src/App.tsx <<'EOF'
+EOF
+
+App.css içinde de EOF veya terminal komutu olmamalı.
+
+App.tsx şu import ile başlayabilir:
+import { useEffect, useMemo, useState } from "react";
+
+App.css doğrudan CSS ile başlamalı:
+* {
+  box-sizing: border-box;
+}
+
+TÜRKÇE ENCODING:
+App.tsx içinde Türkçe karakterler bozulmuşsa düzelt.
+Bozuk örnekler:
+Ã¼, ÅŸ, Ä±, ÄŸ, Ã§, Ã¶
+
+Bunlar temiz Türkçe olmalı:
+ü, ş, ı, ğ, ç, ö
+
+DİL / UI ÜSLUBU:
+UI dili Türkçe, temiz, net ve güvenli olmalı.
+Capability açıklamalarında eylem kipi kullan:
+- “koruma” değil “koru”
+- “yönetme” değil “yönet”
+- “seçme” değil “seç”
+- “kontrol etme” değil “kontrol et”
+- “saklama” değil “sakla”
+
+Uygulama dili kullanıcıyı kandırmamalı.
+Hata varsa açık göstermeli.
+
+V0.1-ALPHA ANA HEDEFİ:
+core-I v0.1-alpha Windows’ta çalışan temiz Tauri masaüstü uygulaması olsun.
+
+v0.1-alpha’da şunlar çalışmalı:
+1. App.tsx ve App.css düzgün final alpha hâlde çalışsın.
+2. Dev lisans aktif edilebilsin.
+3. Lisans geçerli değilse açık sınırlı mod gösterilsin.
+4. Ollama bağlantısı kontrol edilebilsin.
+5. Model değiştirilebilsin.
+6. Yüklü Ollama modelleri listelenebilsin.
+7. Seçilen model localStorage’da saklansın.
+8. Sohbet geçmişi localStorage’da saklansın.
+9. Uygulama kapanıp açılınca sohbet geçmişi kaybolmasın.
+10. Ayarlar ekranında “Hafızayı temizle” butonu olsun.
+11. UI dili düzgün, güvenli ve eylem kipinde olsun.
+12. Çok dilli system prompt olsun.
+13. Kullanıcı hangi dilde yazarsa core-I aynı dilde cevap versin.
+
+ÇOK DİLLİ HEDEF:
+core-I şu dillerde iyi cevap vermeye çalışmalı:
+- Türkçe
+- English
+- Español
+- Deutsch
+- Français
+
+System prompt içinde şu mantık korunmalı:
+- Kullanıcı Türkçe yazarsa doğal Türkçe cevap ver.
+- İngilizce yazarsa doğal İngilizce cevap ver.
+- İspanyolca yazarsa doğal İspanyolca cevap ver.
+- Almanca yazarsa doğal Almanca cevap ver.
+- Fransızca yazarsa doğal Fransızca cevap ver.
+- Dilleri rastgele karıştırma.
+- Bilmediğin şeyi uydurma.
+- İnternet yoksa bunu açıkça söyle.
+- Zararlı veya riskli isteklerde güvenli cevap davranışını koru.
+
+WINDOWS TAURI HEDEFİ:
+Eğer src-tauri eksikse minimal Tauri kabuğu ekle.
+
+Beklenen yapı:
+src-tauri/
+  Cargo.toml
+  build.rs
+  tauri.conf.json
+  src/
+    main.rs
+
+package.json içinde scriptler çalışır olmalı:
+"dev": "vite --host 127.0.0.1",
+"build": "tsc && vite build",
+"preview": "vite preview",
+"tauri": "tauri"
+
+Gerekli bağımlılıklar:
+- @tauri-apps/cli
+- @tauri-apps/api
+- vite
+- react
+- react-dom
+- typescript
+
+vite.config.ts içinde port 1420 kullanılmalı.
+Tauri devUrl:
+http://localhost:1420
+
+tauri.conf.json:
+productName: core-I
+identifier: com.corei.app
+beforeDevCommand: npm run dev
+devUrl: http://localhost:1420
+beforeBuildCommand: npm run build
+frontendDist: ../dist
+
+WINDOWS KONTROLLERİ:
+Aşağıdaki komutları kontrol et:
+node -v
+npm -v
+rustc --version
+cargo --version
+ollama -v
+
+Ollama yoksa kullanıcıya açıkça Ollama for Windows kurması gerektiğini söyle.
+
+Model yoksa öner:
+ollama pull llama3.2:3b
+
+Daha iyi çok dilli kalite için öner:
+ollama pull gemma3:4b
+
+OLLAMA ENTEGRASYONU:
+Ollama API:
+http://localhost:11434/api/tags
+
+Chat API:
+http://localhost:11434/api/chat
+
+Model listesi /api/tags üzerinden alınmalı.
+Kullanıcı model seçebilmeli.
+Seçilen model localStorage’da saklanmalı.
+
+Chat isteğinde stream false olabilir.
+options içinde şu ayarlar kullanılabilir:
+temperature: 0.25
+top_p: 0.85
+repeat_penalty: 1.12
+
+LİSANS MANTIĞI:
+Şu an prototipte:
+COREI- ile başlayan token geçerli kabul edilebilir.
+
+Dev lisans butonu:
+“Dev lisansı aktif et”
+
+Dev token:
+COREI-DEV-LOCAL-0001
+
+Lisans durumları:
+- missing
+- valid
+- invalid
+- restricted
+
+Lisans geçerliyse:
+Chat aktif.
+
+Lisans yoksa veya geçersizse:
+Chat sınırlı modda.
+Kullanıcıya açıkça bildir.
+
+EULA, gizlilik bildirimi ve telemetry/audit rızası ayrı gösterilmeli.
+Telemetry varsayılan olarak zorunlu olmamalı.
+Offline konuşmalar cihazda kalmalı.
+
+DOĞUŞTAN GELEN CORE CAPABILITY LİSTESİ:
+Capabilities ekranındaki core capability registry şu 15 yeteneği göstermeli.
+
+1. Local Chat
+Açıklama:
+Ollama üzerinden yerel LLM ile konuş.
+Durum:
+Lisans geçerliyse ready, değilse restricted.
+Kaynak:
+core
+
+2. Model Manager
+Açıklama:
+Yüklü yerel modelleri listele, seç, kaydet ve aktif modeli yönet.
+Durum:
+active
+Kaynak:
+core
+
+3. Local Memory
+Açıklama:
+Sohbet geçmişini cihazda sakla ve sonraki açılışta geri yükle.
+Durum:
+active
+Kaynak:
+core
+
+4. Project Memory
+Açıklama:
+Kullanıcının proje notlarını, kararlarını ve devam eden işleri yerelde hatırla.
+Durum:
+planned
+Kaynak:
+core
+
+5. Skill Pack Manager
+Açıklama:
+.corepack modül, rol, persona, veri seti ve yetenek paketlerini yönet.
+Durum:
+planned
+Kaynak:
+core
+
+6. Capability Registry
+Açıklama:
+core-I’in aktif, sınırlı, planlanan ve paketlerden gelen yeteneklerini kayıt altında tut.
+Durum:
+active
+Kaynak:
+core
+
+7. License Gate
+Açıklama:
+Token yoksa veya geçersizse açıkça sınırlı/deaktive mod göster.
+Durum:
+Lisans geçerliyse active, değilse restricted.
+Kaynak:
+core
+
+8. Safe Mode
+Açıklama:
+Zararlı veya riskli isteklerde güvenli cevap davranışını koru.
+Durum:
+active
+Kaynak:
+core
+
+9. Language Guard
+Açıklama:
+Kullanıcının dilini algıla ve aynı dilde temiz cevap ver.
+Durum:
+active
+Kaynak:
+core
+
+Destek hedefi:
+Türkçe, English, Español, Deutsch, Français.
+
+10. Offline Status
+Açıklama:
+Ollama çalışıyor mu, model hazır mı ve internet gerekmiyor mu kontrol et.
+Durum:
+Ollama online ise active, offline ise offline, kontrol edilmediyse planned.
+Kaynak:
+core
+
+11. Local File Reader
+Açıklama:
+Kullanıcının seçtiği yerel dosyaları oku ve özetle.
+Durum:
+planned
+Kaynak:
+core
+
+Güvenlik notu:
+core-I kendiliğinden dosya gezmemeli.
+Sadece kullanıcı dosya seçerse okumalı.
+
+İlk desteklenecek dosya tipleri:
+.txt
+.md
+.json
+.csv
+
+Sonraki sürümlerde:
+.pdf
+.docx
+.xlsx
+.srt
+.ass
+
+12. Export / Import
+Açıklama:
+Sohbetleri, ayarları, hafızayı ve paket listesini dışa/içe aktar.
+Durum:
+planned
+Kaynak:
+core
+
+13. Diagnostics
+Açıklama:
+Sistem durumunu kontrol et ve anlaşılır hata raporu üret.
+Durum:
+planned
+Kaynak:
+core
+
+Diagnostics ileride şunları kontrol edecek:
+- Node var mı?
+- Tauri çalışıyor mu?
+- Ollama var mı?
+- Ollama API erişilebilir mi?
+- Model var mı?
+- Lisans geçerli mi?
+- Hafıza yazılabiliyor mu?
+- Paket sistemi hazır mı?
+
+14. Permission Manager
+Açıklama:
+Paketlerin hangi izinleri istediğini göster ve yönet.
+Durum:
+planned
+Kaynak:
+core
+
+İleride yönetilecek izin örnekleri:
+- local_files_read
+- local_files_write
+- network_access
+- model_access
+- tool_execution
+- memory_access
+- adult_content
+
+15. Tool Runner
+Açıklama:
+Güvenli, izinli ve kayıtlı araçları çalıştır.
+Durum:
+planned
+Kaynak:
+core
+
+İleride örnek araçlar:
+- denklem çöz
+- dosya dönüştür
+- JSON oku
+- CSV analiz et
+- metin temizle
+
+CAPABILITY DURUM MANTIĞI:
+Aktif / hazır olanlar:
+- Local Chat: lisansa göre ready veya restricted
+- Model Manager: active
+- Local Memory: active
+- Capability Registry: active
+- License Gate: lisansa göre active veya restricted
+- Safe Mode: active
+- Language Guard: active
+- Offline Status: Ollama durumuna göre active/offline/planned
+
+Planlı olanlar:
+- Project Memory
+- Skill Pack Manager
+- Local File Reader
+- Export / Import
+- Diagnostics
+- Permission Manager
+- Tool Runner
+
+PAKET / MODÜL KATEGORİLERİ:
+Paketler ekranında şu genel kategori mantığı korunmalı:
+
+1. Scientific & Educational Modules
+Açıklama:
+Bilim, eğitim, araştırma, ders anlatımı, konu öğretimi ve akademik destek modülleri.
+
+2. Creative Production Modules
+Açıklama:
+Video, görsel, yazı, senaryo, müzik, tasarım, kurgu ve yaratıcı üretim iş akışları.
+
+3. Personal Development Modules
+Açıklama:
+Kişisel gelişim, öğrenme, alışkanlık, motivasyon, koçluk ve günlük gelişim destekleri.
+
+4. Professional Role Modules
+Açıklama:
+Yöneticilik, asistanlık, danışmanlık, planlama, analiz, raporlama ve mesleki roller.
+
+5. Companion & Social Persona Modules
+Açıklama:
+Sohbet arkadaşı, sosyal rol, yaşam asistanı, karakter/persona ve ilişki odaklı modüller.
+
+6. Lifestyle & Daily Assistant Modules
+Açıklama:
+Günlük yaşam, organizasyon, rutinler, eğlence, öneriler ve kişisel yardımcı modülleri.
+
+7. Relationship & Intimacy Modules
+Açıklama:
+Yalnızca yasal sınırlar içinde; uygun yaş, açık rıza ve güvenli kullanım koşullarına bağlı ilişki, yakınlık ve yetişkin odaklı modüller.
+
+8. Custom Capability Modules
+Açıklama:
+core-I mimarisiyle uyumlu herhangi bir yasal yetenek, rol, persona, veri, model veya iş akışı uzantısı.
+
+ÖNEMLİ:
+Paketler sadece akademik modüllerle sınırlı değildir.
+Paketler şunları ekleyebilir:
+- yetenek
+- rol
+- persona
+- uzmanlık
+- dataset
+- model
+- workflow
+- araç
+- arayüz bileşeni
+
+İLERİ YOL HARİTASI:
+
+V0.1-ALPHA:
+Amaç:
+Windows’ta çalışan temel Tauri app.
+
+İçerik:
+- UI çalışır.
+- Lisans ekranı çalışır.
+- Dev lisans çalışır.
+- Chat sınırlı mod mantığı çalışır.
+- Ollama bağlantısı kontrol edilir.
+- Yüklü modeller listelenir.
+- Model seçilir.
+- Sohbet geçmişi localStorage’da saklanır.
+- Capability registry 15 core capability gösterir.
+- Planlı özellikler planned görünür.
+
+V0.1-BETA:
+Amaç:
+Kod yapısını temizle ve core-I’i sürdürülebilir hale getir.
+
+Yapılacak:
+App.tsx tek dosya olarak şişerse modüler yapıya böl.
+
+Önerilen yapı:
+src/
+  App.tsx
+  data/
+    capabilities.ts
+    plannedPacks.ts
+  core/
+    ollamaClient.ts
+    licenseManager.ts
+    memoryStore.ts
+    diagnostics.ts
+  components/
+    Sidebar.tsx
+    ChatPage.tsx
+    CapabilitiesPage.tsx
+    PacksPage.tsx
+    ModelsPage.tsx
+    LicensePage.tsx
+    SettingsPage.tsx
+
+v0.1-beta’da gerçek eklenebilecek özellikler:
+- Diagnostics paneli
+- Export / Import başlangıcı
+- Project Memory başlangıcı
+- Local File Reader başlangıcı
+- Daha temiz model manager
+
+V0.2:
+Amaç:
+.corepack paket sistemini başlat.
+
+İlk .corepack formatı basit olsun.
+Aslında zip olabilir.
+
+Örnek yapı:
+teacher.corepack
+  manifest.json
+  system_prompt.md
+  README.md
+  assets/icon.png
+
+manifest.json örneği:
+{
+  "id": "corei.teacher.basic",
+  "name": "Basic Teacher",
+  "version": "0.1.0",
+  "type": "role-pack",
+  "description": "core-I'i sade anlatan bir öğretmen rolüne dönüştürür.",
+  "entryPrompt": "system_prompt.md",
+  "minCoreVersion": "0.1.0",
+  "offline": true,
+  "permissions": []
+}
+
+İlk hedef:
+Paket yüklenince aktif system prompt değişsin.
+
+V0.2 özellikleri:
+- Dosyadan .corepack yükle
+- Manifest oku
+- Paketleri listele
+- Aktif paket seç
+- Paket izinlerini göster
+- Paket aktifse system prompt’a bağla
+
+İlk gerçek paket önerisi:
+teacher.corepack
+
+Sonraki paket önerileri:
+- scientific.corepack
+- creative-production.corepack
+- manager.corepack
+- japanese-learning.corepack
+- video-director.corepack
+
+V0.3:
+Amaç:
+core-I’i gerçek yerel asistan haline getir.
+
+Yapılacak:
+- SQLite / local DB hafıza
+- Project Memory gerçek kayıt sistemi
+- Tool Runner başlangıcı
+- Permission Manager gerçek kontrol
+- GitHub’dan paket yükleme
+- Paket güncelleme
+- Paket kaldırma
+- Paket izin onayı
+
+V0.4:
+Amaç:
+Ürünleşme ve dağıtım.
+
+Yapılacak:
+- Windows installer
+- App icon
+- Splash / loading
+- Error boundary
+- License file import
+- Offline license signature verification
+- Legal dokümanları uygulama içine bağla
+- Settings içinde About / Version ekranı
+- GitHub release veya installer çıktısı
+
+V1.0:
+Amaç:
+Kullanıcıya dağıtılabilir core-I ürünü.
+
+İçerik:
+- Offline-first local AI desktop app
+- Yerel model yönetimi
+- Lisans/token sistemi
+- Açık sınırlı mod
+- Yerel hafıza
+- .corepack paket sistemi
+- Permission manager
+- Diagnostics
+- Export / Import
+- İlk resmi paketler
+- Windows installer
+
+LİSANS GELECEK PLANI:
+Şu an prototip:
+COREI- ile başlayan token geçerli.
+
+Gelecek:
+license.corekey gibi imzalı lisans dosyası olabilir.
+
+İçerik:
+{
+  "licenseId": "...",
+  "holder": "...",
+  "tier": "dev|personal|commercial|studio",
+  "features": [],
+  "expiresAt": "...",
+  "signature": "..."
+}
+
+Gerçek doğrulama Rust/Tauri tarafında yapılmalı.
+Frontend sadece durumu göstermeli.
+Token veya lisans geçersizse:
+Açık sınırlı mod.
+
+Stealth yok.
+Manipüle cevap yok.
+
+TEST SENARYOSU:
+Her patch sonrası şu testleri yap:
+
+1. npm install çalışıyor mu?
+2. npm run tauri dev çalışıyor mu?
+3. Uygulama Windows’ta açılıyor mu?
+4. App.tsx içinde bozuk Türkçe encoding kaldı mı?
+5. App.css içinde shell artığı kaldı mı?
+6. Lisans ekranında “Dev lisansı aktif et” çalışıyor mu?
+7. Sidebar’da lisans “Geçerli” görünüyor mu?
+8. Lisans yokken Chat sınırlı modda mı?
+9. Lisans geçerliyken Chat aktif mi?
+10. Modeller ekranı Ollama bağlantısını kontrol ediyor mu?
+11. Ollama online/offline durumunu doğru gösteriyor mu?
+12. Yüklü modeller listeleniyor mu?
+13. Model seçilince aktif model değişiyor mu?
+14. Seçilen model localStorage’da kalıyor mu?
+15. Chat mesaj gönderiyor mu?
+16. Uygulama kapanıp açılınca sohbet geçmişi duruyor mu?
+17. Ayarlar → Hafızayı temizle geçmişi siliyor mu?
+18. Capabilities ekranında 15 capability görünüyor mu?
+19. Gerçekten çalışmayan özellikler planned görünüyor mu?
+20. Safe Mode, License Gate, Language Guard doğru görünüyor mu?
+
+ÇALIŞMA TARZI:
+- Önce mevcut dosya durumunu analiz et.
+- Büyük refactor yapmadan önce v0.1-alpha’yı çalıştır.
+- Gerekirse küçük patch’lerle ilerle.
+- Gereksiz özellik ekleme.
+- Çalışan davranışı bozma.
+- Bozuk Türkçe karakterleri temizle.
+- src-tauri eksikse minimal Tauri kabuğu ekle.
+- package.json scripts doğru değilse düzelt.
+- npm run tauri dev çalışmadan v0.2 işlerine geçme.
+- Her adımda ne yaptığını açıkça raporla.
+- Hata varsa saklama; açıkça söyle.
+
+İLK GÖREV:
+Bu klasörü Windows’ta çalışan core-I v0.1-alpha Tauri uygulamasına dönüştür.
+
+Öncelik sırası:
+1. Dosya yapısını kontrol et.
+2. Eksikse Tauri kabuğunu ekle.
+3. package.json / vite.config.ts / src-tauri dosyalarını düzelt.
+4. App.tsx içindeki Türkçe encoding bozukluklarını temizle.
+5. Capability listesini 15 doğuştan core capability olacak şekilde güncelle.
+6. Dev lisans, Ollama kontrolü, model seçimi ve chat hafızasını koru.
+7. npm install çalıştır.
+8. npm run tauri dev çalıştır.
+9. Test sonuçlarını raporla.
+
+BEKLENEN SONUÇ:
+core-I Windows’ta açılmalı.
+v0.1-alpha temel davranışları çalışmalı.
+Capabilities ekranı genişlemiş olmalı.
+Gelecek özellikler planned görünmeli.
+Kullanıcı kandırılmamalı.
+Lisans ve güvenlik davranışı açık olmalı.
+.corepack ve ileri modüler mimari için sağlam temel oluşmalı.

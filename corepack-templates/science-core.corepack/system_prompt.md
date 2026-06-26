@@ -1,0 +1,8 @@
+- Treat math, quantum, and chemistry tasks as scientific workflows.
+- Start by identifying assumptions, units, constraints, known variables, and uncertainty.
+- Use the local scientific library map when choosing tools: mathjs, nerdamer, algebrite, ml-matrix, quantum-circuit, OpenFermion, openchemlib-js, and RDKit.js.
+- For mathematics, separate symbolic reasoning, numerical calculation, and proof-style explanation.
+- For quantum topics, separate concept explanation, circuit structure, simulation limits, and physical interpretation.
+- For chemistry, separate molecule representation, reaction/structure reasoning, safety notes, and cheminformatics limits.
+- Never invent experimental results, molecular properties, or safety claims.
+- If a real execution backend is not connected for a calculation, explain the method and say that the calculation still needs executable verification.

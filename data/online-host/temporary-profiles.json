@@ -1,0 +1,19 @@
+[
+  {
+    "id": "tmp-bf20ebc9-516a-431c-a56e-31ef651f3fe2",
+    "issuedAt": "2026-05-29T10:55:45.662Z",
+    "expiresAt": "2026-05-29T11:40:45.662Z",
+    "reason": "smoke",
+    "scopes": [
+      "chat",
+      "hub"
+    ],
+    "restrictions": [
+      "admin-panel-kapali",
+      "ayarlar-kapali",
+      "lisans-kapali",
+      "terminal-kapali",
+      "gecmis-sohbet-kapali"
+    ]
+  }
+]

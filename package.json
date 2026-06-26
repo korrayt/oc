@@ -1,0 +1,42 @@
+{
+  "name": "oc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --configLoader runner",
+    "build": "tsc && vite build --configLoader runner",
+    "test": "node --test tests/site-paths.test.mjs tests/brand-config.test.mjs",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "host:api": "node scripts/core-host-api.mjs",
+    "host:lan:start": "powershell -ExecutionPolicy Bypass -File scripts/start-host-lan.ps1",
+    "host:lan:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-host-lan.ps1",
+    "host:tunnel:start": "powershell -ExecutionPolicy Bypass -File scripts/start-ssh-reverse-tunnel.ps1",
+    "host:tunnel:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-ssh-reverse-tunnel.ps1",
+    "deploy:site": "npm run build && node scripts/sync-site.mjs",
+    "deploy:pages": "npm run build",
+    "release": "npm run tauri build",
+    "fix:mojibake": "node scripts/fix-mojibake.mjs"
+  },
+  "dependencies": {
+    "@rdkit/rdkit": "^2025.3.4-1.0.0",
+    "@tauri-apps/api": "^2.0.0",
+    "algebrite": "^1.4.0",
+    "jszip": "^3.10.1",
+    "mathjs": "^15.2.0",
+    "ml-matrix": "^6.12.2",
+    "nerdamer": "^1.1.13",
+    "openchemlib": "^9.22.1",
+    "quantum-circuit": "^0.9.247",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3"
+  }
+}

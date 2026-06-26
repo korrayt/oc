@@ -1,0 +1,11 @@
+{
+  "id": "corei.teacher.basic",
+  "name": "Kai",
+  "version": "0.1.0",
+  "type": "role-pack",
+  "description": "core-I'i sade, guvenli ve ogretici anlatim moduna gecirir.",
+  "entryPrompt": "system_prompt.md",
+  "minCoreVersion": "0.1.0",
+  "offline": true,
+  "permissions": []
+}
