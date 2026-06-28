@@ -2,6 +2,10 @@
 import { useRef, type ChangeEvent } from "react";
 import JSZip from "jszip";
 import "./App.css";
+import {
+  resolveLicenseStatusForRuntime,
+  resolveProductEnabledForRuntime,
+} from "./license-runtime.mjs";
 
 type Page =
   | "chat"
@@ -3636,6 +3640,7 @@ function App() {
   const [guestMessage, setGuestMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [ollamaStatus, setOllamaStatus] = useState<OllamaStatus>("unknown");
+  const runningInTauri = isRunningInTauri();
 
   const [licenseToken, setLicenseToken] = useState(() => {
     return localStorage.getItem(STORAGE_KEYS.licenseToken) || "";
@@ -3812,7 +3817,10 @@ function App() {
   const [continuationMessage, setContinuationMessage] = useState("");
   const [productEnabled, setProductEnabled] = useState(() => {
     const value = localStorage.getItem(STORAGE_KEYS.productEnabled);
-    return value === null ? true : value === "true";
+    return resolveProductEnabledForRuntime(
+      value === null ? true : value === "true",
+      runningInTauri
+    );
   });
   const [productStatusMessage, setProductStatusMessage] = useState("");
   const [currentStatus, setCurrentStatus] = useState("Hazırlanıyor");
@@ -3960,6 +3968,10 @@ function App() {
 
   const isTemporarySession = Boolean(temporaryAccessProfile) && !sessionUsername;
   const isAuthenticated = Boolean(sessionUsername || isTemporarySession);
+  const effectiveLicenseStatus = resolveLicenseStatusForRuntime(
+    licenseStatus,
+    runningInTauri
+  ) as LicenseStatus;
   const currentAccount = useMemo(
     () =>
       accounts.find(
@@ -4065,7 +4077,7 @@ function App() {
     [downloadDecision, downloadQueue]
   );
 
-  const isLicensed = licenseStatus === "valid";
+  const isLicensed = effectiveLicenseStatus === "valid";
   const isRestricted = !isLicensed;
   const isProductOff = !productEnabled;
   const isGuestShareMode = Boolean(shareSessionPathId);
@@ -6176,6 +6188,10 @@ Rules:
 
   function validateLicense() {
     if (!requireProductOn("Lisans doğrulama")) return;
+    if (!runningInTauri) {
+      setLicenseStatus("valid");
+      return;
+    }
     addActivityLog("Lisans doğrulanıyor...", "info");
     const cleanToken = licenseToken.trim();
 
@@ -6650,6 +6666,12 @@ Rules:
   }
 
   function toggleProductPower() {
+    if (!runningInTauri) {
+      setProductStatusMessage("Web sürümde ürün her zaman açık tutulur.");
+      addActivityLog("Web sürümde ürün kapatılamaz.", "info");
+      return;
+    }
+
     setProductEnabled((current) => {
       const next = !current;
       productEnabledRef.current = next;
@@ -9602,7 +9624,7 @@ Rules:
 
           <span>Lisans</span>
           <strong className={isLicensed ? "ok" : "warn"}>
-            {licenseText(licenseStatus)}
+            {licenseText(effectiveLicenseStatus)}
           </strong>
 
           <span>Ollama</span>
@@ -12096,7 +12118,7 @@ Rules:
                 <p>EULA, gizlilik, telemetry rızası ve token durumu.</p>
               </div>
               <span className={`pill ${isLicensed ? "success" : "danger"}`}>
-                {licenseText(licenseStatus)}
+                {licenseText(effectiveLicenseStatus)}
               </span>
             </header>
 
