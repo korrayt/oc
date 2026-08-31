@@ -33,7 +33,7 @@ const temporaryProfilesFile = path.join(dataDir, "temporary-profiles.json");
 
 const MASTER_ADMIN_PROFILE = {
   email: process.env.COREI_ADMIN_EMAIL || "ben@koraytasan.com",
-  phone: process.env.COREI_ADMIN_PHONE || "+90 5553163797",
+  phone: process.env.COREI_ADMIN_PHONE ?? '',
 };
 
 const RECOVERY_QUESTIONS = [

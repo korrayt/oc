@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRef, type ChangeEvent } from "react";
 import JSZip from "jszip";
 import "./App.css";
@@ -591,7 +591,7 @@ const defaultMessages: Message[] = [
 const MASTER_ADMIN_PROFILE = {
   fullName: "Soner Koray Taşan",
   email: "ben@koraytasan.com",
-  phone: "+90 5553163797",
+  phone: (import.meta.env.VITE_COREI_ADMIN_PHONE as string) ?? '',
 } as const;
 
 const ADMIN_RECOVERY_QUESTIONS: PasswordRecoveryQuestion[] = [
